@@ -8,9 +8,9 @@ import {AngularFirestore} from '@angular/fire/firestore';
 export class TrainingService {
   exerciseChanged = new Subject<Exercise>();
   exercisesChanged = new Subject<Exercise[]>();
+  finishedExercisesChanged = new Subject<Exercise[]>();
   private availableExercises: Exercise[] = [];
   private runningExercise: Exercise;
-  private exercises: Exercise[] = [];
 
   constructor(private db: AngularFirestore) {}
 
@@ -37,6 +37,7 @@ export class TrainingService {
   }
 
   startExercise(selectedId: string) {
+    // this.db.doc('availableExercises/' + selectedId).update({lastSelected: new Date()});
     this.runningExercise = this.availableExercises.find(ex => ex.id === selectedId);
     this.exerciseChanged.next({...this.runningExercise});
   }
@@ -44,7 +45,7 @@ export class TrainingService {
   completeExercise() {
     this.addDataToDatabase({
       ...this.runningExercise,
-      date: new Date(),
+      date: Date.now(),
       state: 'completed'
     });
     this.runningExercise = null;
@@ -56,7 +57,7 @@ export class TrainingService {
       ...this.runningExercise,
       duration: this.runningExercise.duration * (progress / 100),
       calories: this.runningExercise.calories * (progress / 100),
-      date: new Date(),
+      date: Date.now(),
       state: 'cancelled'
     });
     this.runningExercise = null;
@@ -67,8 +68,11 @@ export class TrainingService {
     return {...this.runningExercise};
   }
 
-  getCompletedOrCancelledExercises() {
-    return this.exercises.slice();
+  fetchCompletedOrCancelledExercises() {
+    this.db.collection('finishedExercises').valueChanges().subscribe(
+      (exercises: Exercise[]) => {
+      this.finishedExercisesChanged.next(exercises);
+    });
   }
 
   private addDataToDatabase(exercise) {
