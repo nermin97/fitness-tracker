@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {StopTrainingComponent} from './stop-training.component';
-import {Subscription} from 'rxjs';
 import {TrainingService} from '../training.service';
 
 @Component({
@@ -10,7 +9,6 @@ import {TrainingService} from '../training.service';
   styleUrls: ['./current-training.component.css']
 })
 export class CurrentTrainingComponent implements OnInit {
-  private dialogSubscription: Subscription;
   progress = 0;
   timer: number;
 
@@ -37,7 +35,7 @@ export class CurrentTrainingComponent implements OnInit {
         progress: this.progress
       }});
 
-    this.dialogSubscription = dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.trainingService.cancelExercise(this.progress);
       } else {
