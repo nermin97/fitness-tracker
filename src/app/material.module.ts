@@ -10,7 +10,7 @@ import {
   MatInputModule,
   MatListModule,
   MatNativeDateModule,
-  MatOptionModule,
+  MatOptionModule, MatPaginatorModule,
   MatProgressSpinnerModule,
   MatSelectModule,
   MatSidenavModule, MatSortModule,
@@ -40,7 +40,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     MatProgressSpinnerModule,
     MatDialogModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatPaginatorModule
   ],
   exports: [
     MatButtonModule,
@@ -61,7 +62,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     MatProgressSpinnerModule,
     MatDialogModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatPaginatorModule
   ]
 })
 export class MaterialModule {}
