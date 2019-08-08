@@ -3,6 +3,7 @@ import {Subject, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {AngularFirestore} from '@angular/fire/firestore';
+import {UiService} from '../shared/ui.service';
 
 @Injectable()
 export class TrainingService {
@@ -13,29 +14,31 @@ export class TrainingService {
   private runningExercise: Exercise;
   private fbSubs: Subscription[] = [];
 
-  constructor(private db: AngularFirestore) {}
+  constructor(private db: AngularFirestore, private uiService: UiService) {}
 
 
   fetchAvailableExercises() {
+    this.uiService.loadingStateChanged.next(true);
     this.fbSubs.push(
-    this.db
-      .collection('availableExercises')
-      .snapshotChanges()
-      .pipe(map(docArray => {
-        return docArray.map(doc => {
-          return {
-            id: doc.payload.doc.id,
-            name: doc.payload.doc.data()['name'],
-            duration: doc.payload.doc.data()['duration'],
-            calories: doc.payload.doc.data()['calories']
-          };
-        });
-      })
-      )
-      .subscribe((exercises: Exercise[]) => { // this subscription replaces itself, it does not pollute the memory
-        this.availableExercises = exercises;
-        this.exercisesChanged.next([...this.availableExercises]);
-      })
+      this.db
+        .collection('availableExercises')
+        .snapshotChanges()
+        .pipe(map(docArray => {
+          return docArray.map(doc => {
+            return {
+              id: doc.payload.doc.id,
+              name: doc.payload.doc.data()['name'],
+              duration: doc.payload.doc.data()['duration'],
+              calories: doc.payload.doc.data()['calories']
+            };
+          });
+        })
+        )
+        .subscribe((exercises: Exercise[]) => { // this subscription replaces itself, it does not pollute the memory
+          this.uiService.loadingStateChanged.next(false);
+          this.availableExercises = exercises;
+          this.exercisesChanged.next([...this.availableExercises]);
+        })
     );
   }
 
