@@ -1,4 +1,4 @@
-import {Component, Inject, Output} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
@@ -14,7 +14,9 @@ import {MAT_DIALOG_DATA} from '@angular/material';
 
 })
 export class StopTrainingComponent {
+  passedData;
 
-  constructor(@Inject(MAT_DIALOG_DATA) private passedData: any) {
+  constructor(@Inject(MAT_DIALOG_DATA) passedData: any) {
+    this.passedData = passedData;
   }
 }

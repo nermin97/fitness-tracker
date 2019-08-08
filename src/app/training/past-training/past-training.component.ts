@@ -12,7 +12,7 @@ import {Subscription} from 'rxjs';
 export class PastTrainingComponent implements OnInit, AfterViewInit, OnDestroy {
   displayedColumns = ['date', 'name', 'duration', 'calories', 'state'];
   dataSource = new MatTableDataSource<Exercise>();
-  private paginatorSizeOptions = [];
+  paginatorSizeOptions = [];
   private finishedExercisesSubscription: Subscription;
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
